@@ -1,110 +1,96 @@
 <?php
 session_start();
-include "db.php";
 
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
+require_once "config/db.php";
+require_once "includes/products.php";
+require_once "includes/cart_helpers.php";
+
+initCart();
+
+// Validate action + id safely
+$allowedActions = ["add", "remove", "increase", "decrease"];
+$action = $_GET['action'] ?? null;
+$idRaw = $_GET['id'] ?? null;
+
+$message = "";
+
+if ($action !== null || $idRaw !== null) {
+    if (!in_array($action, $allowedActions, true)) {
+        $message = "Invalid action requested.";
+    } elseif (!ctype_digit($idRaw)) {
+        $message = "Invalid product ID.";
+    } else {
+        $id = (int)$idRaw;
+
+        // Make sure product exists
+        $product = getProductById($conn, $id);
+        if (!$product) {
+            $message = "Product not found.";
+        } else {
+            // Perform action
+            if ($action === "add") addToCart($id);
+            if ($action === "remove") removeFromCart($id);
+            if ($action === "increase") increaseQty($id);
+            if ($action === "decrease") decreaseQty($id);
+        }
+    }
 }
 
-if (isset($_GET['action']) && isset($_GET['id'])) {
-    $id = $_GET['id'];
-
-    if (!isset($_SESSION['cart'][$id])) {
-        $_SESSION['cart'][$id] = 0;
-    }
-
-    if ($_GET['action'] == "add") {
-        $_SESSION['cart'][$id]++;
-    }
-
-    if ($_GET['action'] == "remove") {
-        $_SESSION['cart'][$id] = 0;
-    }
-
-    if ($_GET['action'] == "set" && isset($_GET['qty'])) {
-        $qty = intval($_GET['qty']);
-        $_SESSION['cart'][$id] = max(0, $qty);
-    }
-}
-
-// Get products
-$result = $conn->query("SELECT * FROM products");
+$result = getAllProducts($conn);
 ?>
 
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Catalog</title>
+</head>
+<body>
 
-<style>
-    .btn {
-        padding: 4px 10px;
-        border-radius: 6px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        margin-right: 4px;
-        text-decoration: none;
-        display: inline-block;
-    }
+<?php include "includes/header.php"; ?>
+<?php include "includes/nav.php"; ?>
 
-    .btn-add {
-        background-color: #4CAF50; /* soft green */
-        color: white;
-    }
-
-    .btn-set {
-        background-color: #2196F3; /* soft blue */
-        color: white;
-    }
-
-    .btn-remove {
-        background-color: #f44336; /* soft red */
-        color: white;
-    }
-
-    .qty-input {
-        width: 45px;
-        padding: 4px;
-        text-align: center;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        margin-right: 4px;
-    }
-</style>
 
 <h1>Catalog</h1>
 
+<?php if ($message): ?>
+  <p><strong><?= htmlspecialchars($message) ?></strong></p>
+<?php endif; ?>
+
 <table border="1" cellpadding="5">
 <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Cost</th>
-    <th>Quantity in Cart</th>
-    <th>Actions</th>
+  <th>ID</th>
+  <th>Name</th>
+  <th>Description</th>
+  <th>Cost</th>
+  <th>Quantity in Cart</th>
+  <th>Actions</th>
 </tr>
 
 <?php while ($row = $result->fetch_assoc()):
-    $qty = $_SESSION['cart'][$row['product_id']] ?? 0;
+  $pid = (int)$row['product_id'];
+  $qty = getCartQty($pid);
 ?>
 <tr>
-    <td><?= $row['product_id'] ?></td>
-    <td><?= $row['name'] ?></td>
-    <td><?= $row['description'] ?></td>
-    <td>$<?= number_format($row['cost'], 2) ?></td>
-    <td><?= $qty ?></td>
-    <td>
-        <a href="catalog.php?action=add&id=<?= $row['product_id'] ?>"><button class="btn btn-add">Add</button></a>
-    <form action="catalog.php" method="GET" style="display:inline;">
-        <input type="hidden" name="id" value="<?php echo $row['product_id']; ?>">
-        <input type="number" name="qty" class="qty-input" min="0" value="0">
-        <button type="submit" name="action" value="set" class="btn btn-set">Set Qty</button>
-    </form>
+  <td><?= $pid ?></td>
+  <td><?= htmlspecialchars($row['name']) ?></td>
+  <td><?= htmlspecialchars($row['description']) ?></td>
+  <td>$<?= number_format((float)$row['cost'], 2) ?></td>
+  <td><?= $qty ?></td>
+  <td>
+<a class="btn btn-add" href="catalog.php?action=add&id=<?= $pid ?>">Add</a> |
+<a class="btn btn-remove" href="catalog.php?action=remove&id=<?= $pid ?>">Remove</a> |
+<a class="btn btn-set" href="catalog.php?action=increase&id=<?= $pid ?>">+</a>
+<a class="btn btn-set" href="catalog.php?action=decrease&id=<?= $pid ?>">-</a>
 
-    <a href="catalog.php?action=remove&id=<?php echo $row['product_id']; ?>">
-        <button class="btn btn-remove">Remove</button>
-    </a>
-    </td>
+  </td>
 </tr>
 <?php endwhile; ?>
 </table>
 
-<br>
-<a href="cart.php">Go to Cart</a>
+<p><a href="cart.php">Go to Cart</a></p>
+
+<?php include "includes/footer.php"; ?>
+
+</body>
+</html>
