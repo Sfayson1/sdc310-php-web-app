@@ -2,7 +2,9 @@
 
 ## Overview
 This project is a PHP-based web application developed for SDC310.
-It features a product catalog stored in a MySQL database and a session-based shopping cart that allows users to manage items and view totals.
+It features a product catalog stored in a MySQL database and a session-based shopping cart.
+
+The application has been refactored using the MVC (Model-View-Controller) architecture to improve organization, maintainability, and separation of concerns.
 
 ---
 
@@ -22,16 +24,17 @@ It features a product catalog stored in a MySQL database and a session-based sho
 ### Cart Summary
 - View all items in the cart
 - Displays quantities and line totals
-- Calculates overall cart total
+- Calculates subtotal, tax, shipping, and total
 
 ### Validation
 - Validates product IDs and quantities
 - Prevents invalid or missing input
-- Displays safe, user-friendly behavior
+- Ensures safe, user-friendly behavior
 
-### Checkout (Placeholder)
-- Basic checkout page implemented
-- Displays cart summary (no payment processing)
+### Checkout
+- Displays order confirmation message
+- Clears cart after checkout
+- Redirects user back to the catalog page
 
 ---
 
@@ -45,7 +48,7 @@ It features a product catalog stored in a MySQL database and a session-based sho
 ---
 
 ## Technologies Used
-- PHP (Procedural)
+- PHP (Procedural + MVC Structure)
 - MySQL
 - XAMPP (Apache + MySQL)
 - HTML / CSS
@@ -66,45 +69,50 @@ It features a product catalog stored in a MySQL database and a session-based sho
      ```
 
 3. Place the project folder inside:
-```
-   /Applications/XAMPP/htdocs/   (macOS)
-   C:\xampp\htdocs\             (Windows)
+   /Applications/XAMPP/htdocs/ (macOS)
+   C:\xampp\htdocs\ (Windows)
 
-```
 
 4. Open in browser:
-```
-   http://localhost/shopping_cart/
-```
+   http://localhost/shopping_cart/public/
 
 
 ---
 
-## Folder Structure
+## Folder Structure (MVC)
 
 ```
 shopping_cart/
 │
-├── config/
-│ └── db.php # Database connection
+├── app/
+│ ├── controllers/
+│ │ ├── HomeController.php
+│ │ ├── CatalogController.php
+│ │ ├── CartController.php
+│ │ └── CheckoutController.php
+│ │
+│ ├── models/
+│ │ ├── ProductModel.php
+│ │ └── CartModel.php
+│ │
+│ └── views/
+│ ├── home_view.php
+│ ├── catalog_view.php
+│ ├── cart_view.php
+│ └── checkout_view.php
 │
-├── includes/
-│ ├── header.php # Navigation and layout header
-│ ├── footer.php # Footer
-│ ├── products.php # Product queries
-│ └── cart_helpers.php # Cart logic functions
+├── config/
+│ └── db.php
+│
+├── public/
+│ └── index.php # Front controller (routing)
 │
 ├── database/
-│ └── shopping_cart.sql # Database export
+│ └── shopping_cart.sql
 │
 ├── assets/
 │ └── css/
-│ └── style.css # Stylesheet
-│
-├── index.php # Home page
-├── catalog.php # Product catalog
-├── cart.php # Cart view
-├── checkout.php # Checkout (placeholder)
+│ └── style.css
 │
 └── README.md
 ```
@@ -113,37 +121,39 @@ shopping_cart/
 
 ## Navigation
 
-- Home page provides links to Catalog, Cart, and Checkout
+- Home page provides links to Catalog and Cart
 - Catalog page allows adding/removing items
 - Cart page displays current cart contents and totals
-- Checkout page displays a final summary (placeholder)
+- Checkout page confirms order and resets cart
 
 ---
 
 ## How the Application Works
 
 - Products are stored in the MySQL database
-- The catalog retrieves products using PHP queries
+- Models handle data logic (products and cart)
+- Controllers handle requests and business logic
+- Views display data to the user
 - The cart is stored using PHP sessions
-- Actions like Add/Remove/Update modify session data
-- The cart page calculates totals dynamically
+- Actions (add/remove/update) modify session data
+- The front controller (`index.php`) routes requests to the correct controller
 
 ---
 
 ## Known Limitations
 
-- Checkout is a placeholder (no payment system)
-- No user authentication
-- No persistent cart (session-based only)
+- Checkout does not process payments
+- No user authentication system
+- Cart is session-based (not persistent)
 
 ---
 
 ## Future Improvements
 
 - Full checkout process with order storage
-- User login system
+- User authentication and accounts
 - Persistent cart stored in database
-- Improved UI styling
+- Improved UI styling and responsiveness
 
 ---
 
