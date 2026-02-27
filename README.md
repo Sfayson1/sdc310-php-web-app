@@ -67,7 +67,7 @@ The application has been refactored using the MVC (Model-View-Controller) archit
 ## Screenshots
 
 ### Catalog Page
-![Catalog](assets/screenshots/catalog.png)
+![Catalog](assets/screenshots/Catalog.png)
 
 ### Cart Page
 ![Cart](assets/screenshots/cart.png)
