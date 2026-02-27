@@ -1,5 +1,10 @@
 <?php
+
 initCart();
+
+if (isset($_GET['action']) && $_GET['action'] === 'empty') {
+    clearCart();
+}
 
 $products = getAllProducts($conn);
 

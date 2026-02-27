@@ -3,13 +3,10 @@
 
 <h1>Checkout</h1>
 
-<p><strong><?= htmlspecialchars($message ?? "Thank you!") ?></strong></p>
-<p>Your cart has been cleared.</p>
-<p>Redirecting you back to the catalog...</p>
+<p><?= $message ?></p>
 
-<!-- Redirect after 2 seconds -->
-<meta http-equiv="refresh" content="2;url=<?= htmlspecialchars($redirectUrl) ?>">
+<p>Redirecting to catalog...</p>
 
-<p>If you are not redirected, <a href="<?= htmlspecialchars($redirectUrl) ?>">click here</a>.</p>
+<meta http-equiv="refresh" content="3;url=<?= $redirectUrl ?>">
 
 <?php require __DIR__ . '/layout/footer.php'; ?>

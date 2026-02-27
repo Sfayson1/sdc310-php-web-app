@@ -1,24 +1,29 @@
 <?php
 initCart();
 
-// basic validation
-$id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$action = $_GET['action'] ?? null;
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
-if ($action && $id) {
-    // validate product exists (DB-backed validation)
+if ($action && $id > 0) {
     $product = getProductById($conn, $id);
     if ($product) {
-        if ($action === 'add') addToCart($id);
-        if ($action === 'remove') removeFromCart($id);
-        if ($action === 'increase') increaseQty($id);
-        if ($action === 'decrease') decreaseQty($id);
+        switch ($action) {
+            case 'add':
+            case 'increase':
+                addToCart($id);
+                break;
+
+            case 'decrease':
+                decreaseQty($id);
+                break;
+
+            case 'remove':
+                removeFromCart($id);
+                break;
+        }
     }
-    // redirect to avoid repeat actions on refresh
-    header("Location: index.php?page=catalog");
-    exit();
 }
 
 $products = getAllProducts($conn);
 
-// View gets data only
 require __DIR__ . '/../views/catalog_view.php';

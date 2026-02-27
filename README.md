@@ -38,6 +38,14 @@ The application has been refactored using the MVC (Model-View-Controller) archit
 
 ---
 
+### Architecture
+- Uses MVC (Model-View-Controller) design pattern
+- Controllers handle user requests
+- Models handle database and business logic
+- Views display data to the user
+
+---
+
 ## Database Operations (CRUD)
 
 - Create: Add items to cart (session-based)
@@ -56,6 +64,16 @@ The application has been refactored using the MVC (Model-View-Controller) archit
 
 ---
 
+## Screenshots
+
+### Catalog Page
+![Catalog](assets/screenshots/catalog.png)
+
+### Cart Page
+![Cart](assets/screenshots/cart.png)
+
+---
+
 ## Setup Instructions
 
 1. Start Apache and MySQL using XAMPP
@@ -69,12 +87,14 @@ The application has been refactored using the MVC (Model-View-Controller) archit
      ```
 
 3. Place the project folder inside:
-   /Applications/XAMPP/htdocs/ (macOS)
-   C:\xampp\htdocs\ (Windows)
+   macOS:
+   `/Applications/XAMPP/htdocs/`
 
+   Windows:
+   `C:\xampp\htdocs\`
 
 4. Open in browser:
-   http://localhost/shopping_cart/public/
+   http://localhost/shopping_cart/public/index.php
 
 
 ---
@@ -85,34 +105,23 @@ The application has been refactored using the MVC (Model-View-Controller) archit
 shopping_cart/
 │
 ├── app/
-│ ├── controllers/
-│ │ ├── HomeController.php
-│ │ ├── CatalogController.php
-│ │ ├── CartController.php
-│ │ └── CheckoutController.php
-│ │
-│ ├── models/
-│ │ ├── ProductModel.php
-│ │ └── CartModel.php
-│ │
-│ └── views/
-│ ├── home_view.php
-│ ├── catalog_view.php
-│ ├── cart_view.php
-│ └── checkout_view.php
+│   ├── controllers/
+│   ├── models/
+│   ├── views/
+│   │   └── layout/
 │
 ├── config/
-│ └── db.php
-│
-├── public/
-│ └── index.php # Front controller (routing)
+│   └── db.php
 │
 ├── database/
-│ └── shopping_cart.sql
+│   └── shopping_cart.sql
 │
 ├── assets/
-│ └── css/
-│ └── style.css
+│   └── css/style.css
+│   └── screenshots/
+│
+├── public/
+│   └── index.php
 │
 └── README.md
 ```
@@ -156,6 +165,23 @@ shopping_cart/
 - Improved UI styling and responsiveness
 
 ---
+
+## Project Summary
+
+This project demonstrates the development of a full-stack PHP web application using a MySQL database and a session-based shopping cart system.
+
+Throughout the project, core web development concepts were implemented, including database connectivity, CRUD operations, session management, and user interaction through HTTP requests.
+
+The application was later refactored to follow the Model-View-Controller (MVC) architecture, improving separation of concerns, code organization, and maintainability.
+
+This project strengthened my understanding of:
+- PHP backend development
+- Database integration with MySQL
+- Session-based state management
+- MVC architecture and application design
+- Debugging and testing web applications
+
+Overall, this project provided hands-on experience building a functional web application from initial design through final delivery.
 
 ## Author
 Sherika Fayson
